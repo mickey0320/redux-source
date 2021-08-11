@@ -15,6 +15,8 @@ function createStore(reducer, initialState) {
     }
     currentState = rootReducer(currentState, action);
     listeners.forEach((listener) => listener());
+
+    return action
   }
   function getState() {
     return currentState;

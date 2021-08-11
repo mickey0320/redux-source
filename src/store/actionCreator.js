@@ -14,6 +14,14 @@ export const minus = (payload) => {
   };
 };
 
+export const asyncAdd = (payload) => {
+  return (dispatch) => {
+    setTimeout(() => {
+      dispatch(add(payload));
+    }, 1000);
+  };
+};
+
 export const add2 = (payload) => {
   return {
     type: ADD2,
