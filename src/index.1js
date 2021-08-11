@@ -1,0 +1,54 @@
+import React, { useEffect, useState } from "react";
+import ReactDOM from "react-dom";
+import { bindActionCreators } from "./redux";
+import { Provider, connect } from "./react-redux";
+
+import store from "./store";
+import { add, minus, add2, minus2 } from "./store/actionCreator";
+
+const actions = bindActionCreators({ add, minus, add2, minus2 }, store);
+
+function App() {
+  const [_, forceUpdate] = useState(0);
+  console.log(store.getState());
+  useEffect(() => {
+    store.subscribe(() => {
+      forceUpdate(_ + 1);
+    });
+  }, [_]);
+  return (
+    <div>
+      <p>model:{store.getState().model.num}</p>
+      <p>model2:{store.getState().model2.num}</p>
+      <div>
+        <button onClick={() => actions.add(1)}>+1</button>
+        <button onClick={() => actions.minus(-1)}>-1</button>
+        <button onClick={() => actions.add2(1)}>+1</button>
+        <button onClick={() => actions.minus2(-1)}>-1</button>
+      </div>
+    </div>
+  );
+}
+
+const mapState = (state) => ({
+  model: state.model,
+  model2: state.model2,
+});
+const mapDispatch = (dispatch) => ({
+  add: () => dispatch(add(1)),
+  minus: () => dispatch(minus(-1)),
+  add2: () => dispatch(add2(1)),
+  minus2: () => dispatch(minus2(-1)),
+});
+const App1 = connect(mapState, {
+  add,
+  minus,
+  add2,
+  minus2
+})(App);
+ReactDOM.render(
+  <Provider store={store}>
+    <App1 />
+  </Provider>,
+  document.getElementById("root")
+);

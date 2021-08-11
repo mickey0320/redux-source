@@ -1,17 +1,42 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React, { useCallback } from "react";
+import ReactDOM from "react-dom";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+import { Provider, useDispatch, useSelector } from "./react-redux";
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+import store from "./store";
+import { add, add2 } from "./store/actionCreator";
+
+function Component1() {
+  const count = useSelector((state) => state.model.num);
+  const dispatch = useDispatch();
+
+  const handleClick = useCallback(() => {
+    dispatch(add(1));
+  }, []);
+
+  return <div onClick={handleClick}>{count}</div>;
+}
+
+function Component2() {
+  const count = useSelector((state) => state.model2.num);
+  const dispatch = useDispatch();
+
+  const handleClick = useCallback(() => {
+    dispatch(add2(1));
+  }, []);
+
+  return <div onClick={handleClick}>{count}</div>;
+}
+
+function App() {
+  return (
+    <Provider store={store}>
+      <div>
+        <Component1 />
+        <Component2 />
+      </div>
+    </Provider>
+  );
+}
+
+ReactDOM.render(<App />, document.getElementById("root"));
